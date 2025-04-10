@@ -34,7 +34,9 @@ class TextNormalizer:
                         "Ave.": "Avenue",
                         "etc.": "et cetera",
                         "i.e.": "that is",
-                        "e.g.": "for example",}
+                        "e.g.": "for example",
+                        "$": "dollars",
+                        "M": "million"}
 
     def expand_abbreviations(self, text):
         """Expands known abbreviations in the text."""
@@ -42,15 +44,27 @@ class TextNormalizer:
             text = re.sub(r'\b'+abbr, expansion+" ", text)
         return text
 
-    # def convert_numbers_to_words(self, text):
-    #     """Convert numeric digits into words."""
-    #     text = re.sub(r'\d+',w2n.word_to_num(text), text)
-    #     return text
     def number_to_words(self,text):
         def replace(match):
             num = int(match.group())
             return num2words(num)
         return re.sub(r'\b\d+\b', replace, text)
+
+    # def normalize_year(self,year):
+    #     """Convert 2023 → twenty twenty-three"""
+    #     if 2000 <= year <= 2099:
+    #         return f"twenty {num2words(year % 100)}"
+    #     return num2words(year)
+
+    # def normalize_text(self,text):
+    #     for abbr, full in self.abbreviations.items():
+    #         text = text.replace(abbr, full)
+    #     # Step 2: Convert money (e.g., 5.6M)
+    #     money_pattern = r'(\d+(\.\d+)?)(\s*)million|M|m'
+    #     text = re.sub(r'\$(\d+(\.\d+)?)([Mm])', lambda m: f"{num2words(float(m.group(1)))} million dollars", text)
+    #     # Step 3: Convert year (4-digit number)
+    #     text = re.sub(r'\b(20\d{2})\b', lambda m: self.normalize_year(int(m.group())), text)
+    #     return text
 
     def remove_punctuation(self, text):
         """Remove punctuation marks from the text.(!"#$%&'()*+,-./:;<=>?@[\]^_`{|})"""

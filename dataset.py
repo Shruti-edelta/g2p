@@ -59,6 +59,7 @@ for i in range(len(df)):
     path = os.path.join(folder_path, "wavs", f"{file_id}.npy")
     df.at[i, 'Read_npy'] = path
 
+
 print(df)
 
 rows_all_null = df[df.isnull().any(axis=1)]

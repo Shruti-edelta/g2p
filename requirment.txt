@@ -1,0 +1,6 @@
+nltk
+numpy
+tensorflow
+contractions
+word2number
+num2words

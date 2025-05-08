@@ -188,6 +188,7 @@ if __name__ == "__main__":
 
     normalizer = TextNormalizer()
     raw_text = "Dr. Smith is going to the store. Visit https://example.com or email me at test@example.com! I'm excited, No. 1 fan!!!"
+    raw_text="Dr. Smith earned $5.6M in 2023."
     normalized_text = normalizer.normalize_text(raw_text)
     print("Original Text:", raw_text)
     print("Normalized Text:", normalized_text)

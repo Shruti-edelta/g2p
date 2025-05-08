@@ -93,6 +93,24 @@
         "documentation": {}
     },
     {
+        "label": "string",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "string",
+        "description": "string",
+        "detail": "string",
+        "documentation": {}
+    },
+    {
+        "label": "csv",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "csv",
+        "description": "csv",
+        "detail": "csv",
+        "documentation": {}
+    },
+    {
         "label": "Counter",
         "importPath": "collections",
         "description": "collections",
@@ -351,15 +369,6 @@
         "documentation": {}
     },
     {
-        "label": "string",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "string",
-        "description": "string",
-        "detail": "string",
-        "documentation": {}
-    },
-    {
         "label": "contractions",
         "kind": 6,
         "isExtraImport": true,
@@ -448,20 +457,11 @@
         "documentation": {}
     },
     {
-        "label": "remove_stress",
-        "kind": 2,
-        "importPath": "g2p_dataset",
-        "description": "g2p_dataset",
-        "peekOfCode": "def remove_stress(phonemes):\n    return [re.sub(r'\\d', '', p) for p in phonemes]\nwords = []\nphonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])\n    words.append(list(word.lower()))",
-        "detail": "g2p_dataset",
-        "documentation": {}
-    },
-    {
         "label": "encode_sequences",
         "kind": 2,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "def encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        if add_sos: \n            s.append(token2idx['<sos>'])\n        s += [token2idx[c] for c in seq]\n        if add_eos: \n            s.append(token2idx['<eos>'])",
+        "peekOfCode": "def encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        # print(\"seq: \",seq)\n        if add_sos: \n            s.append(token2idx['<sos>'])\n        s += [token2idx[c] for c in seq]\n        if add_eos: ",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -470,7 +470,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "cmu = cmudict.dict()\ndef remove_stress(phonemes):\n    return [re.sub(r'\\d', '', p) for p in phonemes]\nwords = []\nphonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])",
+        "peekOfCode": "cmu = cmudict.dict()\n# def remove_stress(phonemes):\n#     return [re.sub(r'\\d', '', p) for p in phonemes]\nwords = []\nphonemes = []\nseen_punct = set()\nfor word, prons in cmu.items():\n    # Handle pure alphabetic words\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -479,7 +479,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "words = []\nphonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])\n    words.append(list(word.lower()))\n    phonemes.append(phn)\ngraphemes = sorted(set(ch for w in words for ch in w))",
+        "peekOfCode": "words = []\nphonemes = []\nseen_punct = set()\nfor word, prons in cmu.items():\n    # Handle pure alphabetic words\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):\n        if word[0] in seen_punct:\n            continue\n        punct = word[0]",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -488,7 +488,16 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "phonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])\n    words.append(list(word.lower()))\n    phonemes.append(phn)\ngraphemes = sorted(set(ch for w in words for ch in w))\n# print(graphemes)",
+        "peekOfCode": "phonemes = []\nseen_punct = set()\nfor word, prons in cmu.items():\n    # Handle pure alphabetic words\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):\n        if word[0] in seen_punct:\n            continue\n        punct = word[0]\n        print(punct)",
+        "detail": "g2p_dataset",
+        "documentation": {}
+    },
+    {
+        "label": "seen_punct",
+        "kind": 5,
+        "importPath": "g2p_dataset",
+        "description": "g2p_dataset",
+        "peekOfCode": "seen_punct = set()\nfor word, prons in cmu.items():\n    # Handle pure alphabetic words\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):\n        if word[0] in seen_punct:\n            continue\n        punct = word[0]\n        print(punct)\n        seen_punct.add(punct)  # avoid duplicates",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -497,7 +506,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "graphemes = sorted(set(ch for w in words for ch in w))\n# print(graphemes)\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\n# print(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))",
+        "peekOfCode": "graphemes = sorted(set(ch for w in words for ch in w))\n# print(graphemes)\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nprint(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -506,7 +515,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "char2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\n# print(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}",
+        "peekOfCode": "char2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nprint(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -515,7 +524,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "char2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\n# print(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0",
+        "peekOfCode": "char2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nprint(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -524,7 +533,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "char2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\n# print(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)",
+        "peekOfCode": "char2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nprint(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -533,7 +542,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "char2idx['<eos>'] = len(char2idx)\n# print(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)",
+        "peekOfCode": "char2idx['<eos>'] = len(char2idx)\nprint(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -578,7 +587,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "phn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)\n# print(\"phoneme: \",phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        if add_sos: ",
+        "peekOfCode": "phn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)\n# print(\"phoneme: \",phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        # print(\"seq: \",seq)",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -587,7 +596,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "phn2idx['<eos>'] = len(phn2idx)\n# print(\"phoneme: \",phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        if add_sos: \n            s.append(token2idx['<sos>'])",
+        "peekOfCode": "phn2idx['<eos>'] = len(phn2idx)\n# print(\"phoneme: \",phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        # print(\"seq: \",seq)\n        if add_sos: ",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -596,7 +605,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "idx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        if add_sos: \n            s.append(token2idx['<sos>'])\n        s += [token2idx[c] for c in seq]\n        if add_eos: ",
+        "peekOfCode": "idx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []\n    # print(data)\n    for seq in data:\n        s = []\n        # print(\"seq: \",seq)\n        if add_sos: \n            s.append(token2idx['<sos>'])\n        s += [token2idx[c] for c in seq]",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -605,7 +614,7 @@
         "kind": 5,
         "importPath": "g2p_dataset",
         "description": "g2p_dataset",
-        "peekOfCode": "y_out = np.expand_dims(y_out, -1)  # required for sparse categorical loss\nprint(y_out.shape)\n# with open(\"dataset/cmu_dict_no_stress.csv\", \"w\", newline='') as f:\n#     writer = csv.writer(f)\n#     writer.writerow([\"word\", \"phonemes\"])  # Write header row\n#     for w, p in zip(words, phonemes):\n#         word_str = ''.join(w)              # Convert list of chars to a string\n#         phoneme_str = ' '.join(p)          # Convert list of phonemes to space-separated string\n#         writer.writerow([word_str, phoneme_str])\n# with open(\"dataset/cmu_dict.csv\", \"w\", newline='') as f:",
+        "peekOfCode": "y_out = np.expand_dims(y_out, -1)  # required for sparse categorical loss\nprint(y_out.shape)\nimport csv\nwith open(\"dataset/cmu_dict_pun_stress.csv\", \"w\", newline='') as f:\n    writer = csv.writer(f)\n    writer.writerow([\"word\", \"phonemes\"])  # Write header row\n    for w, p in zip(words, phonemes):\n        word_str = ''.join(w)              # Convert list of chars to a string\n        phoneme_str = ' '.join(p)          # Convert list of phonemes to space-separated string\n        writer.writerow([word_str, phoneme_str])",
         "detail": "g2p_dataset",
         "documentation": {}
     },
@@ -821,7 +830,7 @@
         "kind": 2,
         "importPath": "g2p_model_cnn",
         "description": "g2p_model_cnn",
-        "peekOfCode": "def remove_stress(phonemes):\n    return [re.sub(r'\\d', '', p) for p in phonemes]\nwords = []\nphonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])\n    words.append(list(word.lower()))",
+        "peekOfCode": "def remove_stress(phonemes):\n    return [re.sub(r'\\d', '', p) for p in phonemes]\nwords = []\nphonemes = []\nseen_punct = set()\nfor word, prons in cmu.items():\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):\n        if word[0] in seen_punct: # skip second time punctuation\n            continue",
         "detail": "g2p_model_cnn",
         "documentation": {}
     },
@@ -848,7 +857,7 @@
         "kind": 5,
         "importPath": "g2p_model_cnn",
         "description": "g2p_model_cnn",
-        "peekOfCode": "cmu = cmudict.dict()\ndef remove_stress(phonemes):\n    return [re.sub(r'\\d', '', p) for p in phonemes]\nwords = []\nphonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])",
+        "peekOfCode": "cmu = cmudict.dict()\n# print(list(cmu.items())[:5])\nprint(len(cmu))\ndef remove_stress(phonemes):\n    return [re.sub(r'\\d', '', p) for p in phonemes]\nwords = []\nphonemes = []\nseen_punct = set()\nfor word, prons in cmu.items():\n    # Handle entries like \")close-paren\"",
         "detail": "g2p_model_cnn",
         "documentation": {}
     },
@@ -857,7 +866,7 @@
         "kind": 5,
         "importPath": "g2p_model_cnn",
         "description": "g2p_model_cnn",
-        "peekOfCode": "words = []\nphonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])\n    words.append(list(word.lower()))\n    phonemes.append(phn)\ngraphemes = sorted(set(ch for w in words for ch in w))",
+        "peekOfCode": "words = []\nphonemes = []\nseen_punct = set()\nfor word, prons in cmu.items():\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):\n        if word[0] in seen_punct: # skip second time punctuation\n            continue\n        punct = word[0]\n        # print(punct)",
         "detail": "g2p_model_cnn",
         "documentation": {}
     },
@@ -866,7 +875,16 @@
         "kind": 5,
         "importPath": "g2p_model_cnn",
         "description": "g2p_model_cnn",
-        "peekOfCode": "phonemes = []\nfor word, prons in cmu.items():\n    # Skip words with non-alphabetic characters\n    if not word.isalpha():\n        continue\n    phn = remove_stress(prons[0])\n    words.append(list(word.lower()))\n    phonemes.append(phn)\ngraphemes = sorted(set(ch for w in words for ch in w))\n# print(graphemes)",
+        "peekOfCode": "phonemes = []\nseen_punct = set()\nfor word, prons in cmu.items():\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):\n        if word[0] in seen_punct: # skip second time punctuation\n            continue\n        punct = word[0]\n        # print(punct)\n        seen_punct.add(punct)  # avoid duplicates",
+        "detail": "g2p_model_cnn",
+        "documentation": {}
+    },
+    {
+        "label": "seen_punct",
+        "kind": 5,
+        "importPath": "g2p_model_cnn",
+        "description": "g2p_model_cnn",
+        "peekOfCode": "seen_punct = set()\nfor word, prons in cmu.items():\n    # Handle entries like \")close-paren\"\n    if (word[0] in string.punctuation):\n        if word[0] in seen_punct: # skip second time punctuation\n            continue\n        punct = word[0]\n        # print(punct)\n        seen_punct.add(punct)  # avoid duplicates\n        words.append([punct])  # punctuation as a grapheme token",
         "detail": "g2p_model_cnn",
         "documentation": {}
     },
@@ -875,7 +893,7 @@
         "kind": 5,
         "importPath": "g2p_model_cnn",
         "description": "g2p_model_cnn",
-        "peekOfCode": "graphemes = sorted(set(ch for w in words for ch in w))\n# print(graphemes)\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nprint(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))",
+        "peekOfCode": "graphemes = sorted(set(ch for w in words for ch in w))\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nprint(\"grapheme: \",char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\n# print(phoneme_set,len(phoneme_set))",
         "detail": "g2p_model_cnn",
         "documentation": {}
     },
@@ -1298,7 +1316,7 @@
         "kind": 2,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "def phoneme_string_to_list(phoneme_strs):\n    return [p.split() for p in phoneme_strs]\nphonemes = phoneme_string_to_list(phonemes)\ngraphemes = sorted(set(ch for w in words for ch in str(w)))\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab",
+        "peekOfCode": "def phoneme_string_to_list(phoneme_strs):\n    return [p.split() for p in phoneme_strs]\nphonemes = phoneme_string_to_list(phonemes)\ngraphemes = sorted(set(ch for w in words for ch in str(w)))\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1325,7 +1343,7 @@
         "kind": 2,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "def predict_phonemes(model, preprocessed_input):\n    pre_phon_l=[]\n    for w in preprocessed_input:\n        predictions = model.predict(w)\n        # print(predictions[0][0])\n        predicted_phonemes = np.argmax(predictions, axis=-1)  # Get the index of the highest probability phoneme\n        pre_phon_l.append(predicted_phonemes[0])\n    return pre_phon_l\n# Example usage:\nmodel = tf.keras.models.load_model('model/1/model_cnn.keras') ",
+        "peekOfCode": "def predict_phonemes(model, preprocessed_input):\n    pre_phon_l=[]\n    for w in preprocessed_input:\n        predictions = model.predict(w)\n        # print(predictions)\n        predicted_phonemes = np.argmax(predictions, axis=-1)  # Get the index of the highest probability phoneme\n        # print(\"======\",predicted_phonemes)\n        pre_phon_l.append(predicted_phonemes[0])\n    return pre_phon_l\n# Example usage:",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1334,7 +1352,7 @@
         "kind": 2,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "def decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        print(decoded_seq)\n        decoded_preds.append(decoded_seq)\n    return decoded_preds\n# Example usage:\ndecoded_phonemes = decode_predictions(predicted_phonemes, idx2phn)",
+        "peekOfCode": "def decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        # print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        # print(decoded_seq)\n        decoded_preds.append(decoded_seq)\n    return decoded_preds\n# Example usage:\ndecoded_phonemes = decode_predictions(predicted_phonemes, idx2phn)",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1361,7 +1379,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "phonemes = phoneme_string_to_list(phonemes)\ngraphemes = sorted(set(ch for w in words for ch in str(w)))\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}",
+        "peekOfCode": "phonemes = phoneme_string_to_list(phonemes)\ngraphemes = sorted(set(ch for w in words for ch in str(w)))\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1370,7 +1388,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "graphemes = sorted(set(ch for w in words for ch in str(w)))\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0",
+        "peekOfCode": "graphemes = sorted(set(ch for w in words for ch in str(w)))\nchar2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1379,7 +1397,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "char2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)",
+        "peekOfCode": "char2idx = {c: i + 1 for i, c in enumerate(graphemes)}\nchar2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1388,7 +1406,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "char2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)",
+        "peekOfCode": "char2idx['<pad>'] = 0\nchar2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1397,7 +1415,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "char2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}",
+        "peekOfCode": "char2idx['<sos>'] = len(char2idx)\nchar2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1406,7 +1424,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "char2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):",
+        "peekOfCode": "char2idx['<eos>'] = len(char2idx)\nidx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1415,7 +1433,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "idx2char = {i: c for c, i in char2idx.items()}\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):\n    encoded = []",
+        "peekOfCode": "idx2char = {i: c for c, i in char2idx.items()}\nprint(idx2char)\n# Phoneme vocab\nphoneme_set = sorted(set(p for ph in phonemes for p in ph))\nphn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}\nphn2idx['<pad>'] = 0\nphn2idx['<sos>'] = len(phn2idx)\nphn2idx['<eos>'] = len(phn2idx)\nidx2phn = {i: p for p, i in phn2idx.items()}\ndef encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1478,16 +1496,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "new_text = \"Shree Shruti\"\nnew_text = \"excision\"\nnew_text=\"orange\"\n# new_text=\"examplecom\"\nnew_text=\"oneall\"\npreprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training\nprint(\"prerprocessed_input: \",preprocessed_input)\ndef predict_phonemes(model, preprocessed_input):\n    pre_phon_l=[]\n    for w in preprocessed_input:",
-        "detail": "g2p_test",
-        "documentation": {}
-    },
-    {
-        "label": "new_text",
-        "kind": 5,
-        "importPath": "g2p_test",
-        "description": "g2p_test",
-        "peekOfCode": "new_text = \"excision\"\nnew_text=\"orange\"\n# new_text=\"examplecom\"\nnew_text=\"oneall\"\npreprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training\nprint(\"prerprocessed_input: \",preprocessed_input)\ndef predict_phonemes(model, preprocessed_input):\n    pre_phon_l=[]\n    for w in preprocessed_input:\n        predictions = model.predict(w)",
+        "peekOfCode": "new_text = \"Shree Shruti\"\n# new_text = \"excision\"\n# new_text=\"orange\"\n# # new_text=\"examplecom\"\n# new_text=\"oneall\"\npreprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training\nprint(\"prerprocessed_input: \",preprocessed_input)\ndef predict_phonemes(model, preprocessed_input):\n    pre_phon_l=[]\n    for w in preprocessed_input:",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1496,7 +1505,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "preprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training\nprint(\"prerprocessed_input: \",preprocessed_input)\ndef predict_phonemes(model, preprocessed_input):\n    pre_phon_l=[]\n    for w in preprocessed_input:\n        predictions = model.predict(w)\n        # print(predictions[0][0])\n        predicted_phonemes = np.argmax(predictions, axis=-1)  # Get the index of the highest probability phoneme\n        pre_phon_l.append(predicted_phonemes[0])\n    return pre_phon_l",
+        "peekOfCode": "preprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training\nprint(\"prerprocessed_input: \",preprocessed_input)\ndef predict_phonemes(model, preprocessed_input):\n    pre_phon_l=[]\n    for w in preprocessed_input:\n        predictions = model.predict(w)\n        # print(predictions)\n        predicted_phonemes = np.argmax(predictions, axis=-1)  # Get the index of the highest probability phoneme\n        # print(\"======\",predicted_phonemes)\n        pre_phon_l.append(predicted_phonemes[0])",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1505,7 +1514,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "model = tf.keras.models.load_model('model/1/model_cnn.keras') \npredicted_phonemes = predict_phonemes(model, preprocessed_input)\nprint(\"predicted tokenizer phoneme:\",predicted_phonemes)\ndef decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        print(decoded_seq)\n        decoded_preds.append(decoded_seq)",
+        "peekOfCode": "model = tf.keras.models.load_model('model/1/1model_cnn.keras') \npredicted_phonemes = predict_phonemes(model, preprocessed_input)\nprint(\"predicted tokenizer phoneme:\",predicted_phonemes)\n# print(idx2phn)\ndef decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        # print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        # print(decoded_seq)",
         "detail": "g2p_test",
         "documentation": {}
     },
@@ -1514,7 +1523,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "predicted_phonemes = predict_phonemes(model, preprocessed_input)\nprint(\"predicted tokenizer phoneme:\",predicted_phonemes)\ndef decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        print(decoded_seq)\n        decoded_preds.append(decoded_seq)\n    return decoded_preds",
+        "peekOfCode": "predicted_phonemes = predict_phonemes(model, preprocessed_input)\nprint(\"predicted tokenizer phoneme:\",predicted_phonemes)\n# print(idx2phn)\ndef decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        # print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        # print(decoded_seq)\n        decoded_preds.append(decoded_seq)",
         "detail": "g2p_test",
         "documentation": {}
     },

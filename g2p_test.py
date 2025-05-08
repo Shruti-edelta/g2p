@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 df=pd.read_csv("dataset/cmu_dict_no_stress.csv")
+# df=pd.read_csv("dataset/cmu_dict_with_punctu_stress.csv")
 
 words = df["word"].tolist()
 phonemes = df["phonemes"].tolist()
@@ -19,7 +20,7 @@ char2idx['<pad>'] = 0
 char2idx['<sos>'] = len(char2idx)
 char2idx['<eos>'] = len(char2idx)
 idx2char = {i: c for c, i in char2idx.items()}
-
+print(idx2char)
 # Phoneme vocab
 phoneme_set = sorted(set(p for ph in phonemes for p in ph))
 phn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}
@@ -52,10 +53,10 @@ x_len=33
 new_text="Example"
 new_text="Unfolding File"
 new_text = "Shree Shruti"
-new_text = "excision"
-new_text="orange"
-# new_text="examplecom"
-new_text="oneall"
+# new_text = "excision"
+# new_text="orange"
+# # new_text="examplecom"
+# new_text="oneall"
 preprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training
 print("prerprocessed_input: ",preprocessed_input)
 
@@ -63,22 +64,24 @@ def predict_phonemes(model, preprocessed_input):
     pre_phon_l=[]
     for w in preprocessed_input:
         predictions = model.predict(w)
-        # print(predictions[0][0])
+        # print(predictions)
         predicted_phonemes = np.argmax(predictions, axis=-1)  # Get the index of the highest probability phoneme
+        # print("======",predicted_phonemes)
         pre_phon_l.append(predicted_phonemes[0])
     return pre_phon_l
 
 # Example usage:
-model = tf.keras.models.load_model('model/1/model_cnn.keras') 
+model = tf.keras.models.load_model('model/1/1model_cnn.keras') 
 predicted_phonemes = predict_phonemes(model, preprocessed_input)
 print("predicted tokenizer phoneme:",predicted_phonemes)
 
+# print(idx2phn)
 def decode_predictions(predictions, idx2phn):
     decoded_preds = []
     for w_p in predictions:
-        print(w_p)
+        # print(w_p)
         decoded_seq = [idx2phn.get(i, "<unk>") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token
-        print(decoded_seq)
+        # print(decoded_seq)
         decoded_preds.append(decoded_seq)
     return decoded_preds
 

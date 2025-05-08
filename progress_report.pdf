@@ -1,0 +1,25 @@
+Progress Report No.: 1
+
+March 2025 Progress Report:
+
+Roll No.: 07
+
+(1) Full Name: Mungra Shruti Sureshbhai
+(2) Your total working days in this month: 19
+(3) Leaves taken: 2
+(4) Total working days of the Company in this month: 21
+(5) Task completed in the month of March 2025:
+    a. Developed a program to convert Roman numerals to integers and vice versa.
+    b. Develoaped automatically generate answers using the DeepSeek model (ollama).
+    c. The Terminal output can look like Clean, Formatted text using rich library (like ChatGPT displays its responses).
+    d. Trying to Developed responsive Voicebot.
+    e. Developed TTS Voice-Cloning system using BARK model.
+    f. Integrate the TTS system with the chatbot (combine BARK model and DeepSeek model).
+    g. Try to Understanding The TTS Model Pipeline for my Project.
+   
+(6) Planning for the month of April 2025:
+    a. Will try to find dataset for TTS Model.
+    b. PreProcessing Dataset for G2P Model using rule-based Technique.
+    c. Implementing G2P model.
+    
+Signature of the guide Organization Date

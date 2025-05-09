@@ -1,4 +1,4 @@
-from nltk.corpus import cmudict
+
 import re
 from collections import Counter
 import numpy as np
@@ -6,48 +6,27 @@ import pandas as pd
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, Embedding, Dense,Conv1D, BatchNormalization, Dropout, TimeDistributed, Activation
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import string
-
+from sklearn.model_selection import train_test_split
+import ast
 import tensorflow as tf
 tf.config.threading.set_intra_op_parallelism_threads(1)
 tf.config.threading.set_inter_op_parallelism_threads(1)
 
-cmu = cmudict.dict()
-# print(list(cmu.items())[:5])
-print(len(cmu))
+df = pd.read_csv("dataset/cmu_dict_pun_stress.csv")
 
-def remove_stress(phonemes):
-    return [re.sub(r'\d', '', p) for p in phonemes]
+df['word'] = df['word'].astype(str).apply(list)
+words = df['word'].values
+phonemes = df['phonemes'].apply(ast.literal_eval).values.tolist()
 
-words = []
-phonemes = []
 
-seen_punct = set()
-for word, prons in cmu.items():
+# word_train, word_val, phoneme_train, phoneme_val = train_test_split(words, phonemes, test_size=0.10, random_state=42)
+# pd.DataFrame({'words': word_train, 'Phoneme_text': phoneme_train}).to_csv('dataset/train.csv', index=False)
+# pd.DataFrame({'words': word_val, 'Phoneme_text': phoneme_val}).to_csv('dataset/val.csv', index=False)
 
-    # Handle entries like ")close-paren"
-    if (word[0] in string.punctuation):
-        if word[0] in seen_punct: # skip second time punctuation
-            continue
-        punct = word[0]
-        # print(punct)
-        seen_punct.add(punct)  # avoid duplicates
-        words.append([punct])  # punctuation as a grapheme token
-        phonemes.append(prons[0])
-    else:    
-        words.append(list(word.lower()))
-        phonemes.append(prons[0])  # keep stress
-
-# for word, prons in cmu.items():
-#     # Skip words with non-alphabetic characters
-#     # if not word.isalpha():
-#     #     continue
-#     # phn = remove_stress(prons[0])
-#     phn = prons[0]
-#     words.append(list(word.lower()))
-#     phonemes.append(phn)
-
-print(words[1])
+print(words)
+# print(words[1])
 graphemes = sorted(set(ch for w in words for ch in w))
 char2idx = {c: i + 1 for i, c in enumerate(graphemes)}
 char2idx['<pad>'] = 0
@@ -56,7 +35,6 @@ char2idx['<eos>'] = len(char2idx)
 print("grapheme: ",char2idx)
 idx2char = {i: c for c, i in char2idx.items()}
 
-# Phoneme vocab
 phoneme_set = sorted(set(p for ph in phonemes for p in ph))
 # print(phoneme_set,len(phoneme_set))
 phn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}
@@ -74,6 +52,7 @@ def encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None)
         s = []
         if add_sos: 
             s.append(token2idx['<sos>'])
+        # print(type(seq))
         s += [token2idx[c] for c in seq]
         if add_eos: 
             s.append(token2idx['<eos>'])
@@ -84,13 +63,17 @@ def encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None)
     padded = [s + [token2idx['<pad>']] * (max_len - len(s)) for s in encoded]
     return np.array(padded), max_len
 
+
+
 X, x_len = encode_sequences(words, char2idx)
-print(X[19934])
+print(X)
 y_in, y_len = encode_sequences(phonemes, phn2idx, add_sos=True)
 print(y_in.shape)
 y_out, _ = encode_sequences(phonemes, phn2idx, add_eos=True, maxlen=y_len)
 y_out = np.expand_dims(y_out, -1)
 print(y_out.shape)
+
+word_train, word_val, phoneme_train, phoneme_val = train_test_split(X, y_out, test_size=0.10, random_state=42)
 
 vocab_size = len(char2idx)
 phoneme_size = len(phn2idx)
@@ -120,15 +103,51 @@ def g2p_model(x_len,vocab_size,embedding_dim=128):
 
 model=g2p_model(x_len,vocab_size)
 model.summary()
+print(word_train)
 
+callbacks = [
+    EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True, verbose=1),
+    ModelCheckpoint('model/1/best_model_cnn.keras', monitor='val_loss', save_best_only=True, verbose=1),
+]
 # Fit the model
-history=model.fit(X, y_out, batch_size=32, epochs=25, validation_split=0.1)
+history=model.fit(word_train, phoneme_train, batch_size=32, epochs=100,validation_data=[word_val,phoneme_val],callbacks=callbacks)
 
-model.save('model/model_cnn.keras')
-model.save_weights('model/model_cnn_w.weights.h5')
+model.save('model/1/model_cnn.keras')
+model.save_weights('model/1/model_cnn_w.weights.h5')
 
 history_df = pd.DataFrame(history.history)
 history_df['epoch'] = range(1, len(history_df) + 1)
-history_df.to_csv('model/model_cnn_metrics.csv', index=False)
+history_df.to_csv('model/1/model_cnn_metrics.csv', index=False)
 
 
+
+
+
+# print(data_dict)``
+# words=[]
+# phonemes=[]
+
+# seen_punct = set()
+# for word, prons in cmu.items():
+
+#     # Handle entries like ")close-paren"
+#     if (word[0] in string.punctuation):
+#         if word[0] in seen_punct: # skip second time punctuation
+#             continue
+#         punct = word[0]
+#         # print(punct)
+#         seen_punct.add(punct)  # avoid duplicates
+#         words.append([punct])  # punctuation as a grapheme token
+#         phonemes.append(prons[0])
+#     else:    
+#         words.append(list(word.lower()))
+#         phonemes.append(prons[0])  # keep stress
+
+# # for word, prons in cmu.items():
+# #     # Skip words with non-alphabetic characters
+# #     # if not word.isalpha():
+# #     #     continue
+#     # phn = remove_stress(prons[0])
+#     phn = prons[0]
+#     words.append(list(word.lower()))
+#     phonemes.append(phn)

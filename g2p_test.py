@@ -3,16 +3,19 @@ import numpy as np
 import re
 import numpy as np
 import pandas as pd
+import ast
 
-df=pd.read_csv("dataset/cmu_dict_no_stress.csv")
+df=pd.read_csv("dataset/cmu_dict_pun_stress.csv")
 # df=pd.read_csv("dataset/cmu_dict_with_punctu_stress.csv")
 
 words = df["word"].tolist()
-phonemes = df["phonemes"].tolist()
+phonemes = df["phonemes"].apply(ast.literal_eval).tolist()
 
-def phoneme_string_to_list(phoneme_strs):
-    return [p.split() for p in phoneme_strs]
-phonemes = phoneme_string_to_list(phonemes)
+
+# def phoneme_string_to_list(phoneme_strs):
+#     return [p.split() for p in phoneme_strs]
+# phonemes = phoneme_string_to_list(phonemes)
+# print(phonemes)
 
 graphemes = sorted(set(ch for w in words for ch in str(w)))
 char2idx = {c: i + 1 for i, c in enumerate(graphemes)}
@@ -20,7 +23,8 @@ char2idx['<pad>'] = 0
 char2idx['<sos>'] = len(char2idx)
 char2idx['<eos>'] = len(char2idx)
 idx2char = {i: c for c, i in char2idx.items()}
-print(idx2char)
+print("idx2char: ",idx2char)
+
 # Phoneme vocab
 phoneme_set = sorted(set(p for ph in phonemes for p in ph))
 phn2idx = {p: i + 1 for i, p in enumerate(phoneme_set)}
@@ -28,7 +32,7 @@ phn2idx['<pad>'] = 0
 phn2idx['<sos>'] = len(phn2idx)
 phn2idx['<eos>'] = len(phn2idx)
 idx2phn = {i: p for p, i in phn2idx.items()}
-
+print("idx2phn: ",idx2phn)
 def encode_sequences(data, token2idx, add_sos=False, add_eos=False, maxlen=None):
     encoded = []
     for seq in data:
@@ -53,10 +57,14 @@ x_len=33
 new_text="Example"
 new_text="Unfolding File"
 new_text = "Shree Shruti"
-# new_text = "excision"
+new_text = "excision's"
 # new_text="orange"
-# # new_text="examplecom"
-# new_text="oneall"
+new_text="one-all"
+# new_text='one. shruti two. shree'
+# new_text="example.com"
+# new_text="cnn.com"
+new_text="a42128"
+new_text="#"
 preprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training
 print("prerprocessed_input: ",preprocessed_input)
 
@@ -71,7 +79,8 @@ def predict_phonemes(model, preprocessed_input):
     return pre_phon_l
 
 # Example usage:
-model = tf.keras.models.load_model('model/1/1model_cnn.keras') 
+# model = tf.keras.models.load_model('model/model_cnn.keras') 
+model = tf.keras.models.load_model('model/1/best_model_cnn.keras') 
 predicted_phonemes = predict_phonemes(model, preprocessed_input)
 print("predicted tokenizer phoneme:",predicted_phonemes)
 

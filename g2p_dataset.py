@@ -3,7 +3,7 @@ import re
 import numpy as np
 import pandas as pd
 import string
-
+from sklearn.model_selection import train_test_split
 cmu = cmudict.dict()
 
 # def remove_stress(phonemes):
@@ -15,7 +15,7 @@ phonemes = []
 seen_punct = set()
 for word, prons in cmu.items():
     # Handle pure alphabetic words
-
+    # print(prons)
     # Handle entries like ")close-paren"
     if (word[0] in string.punctuation):
         if word[0] in seen_punct:
@@ -29,7 +29,7 @@ for word, prons in cmu.items():
         words.append(list(word.lower()))
         phonemes.append(prons[0])  # keep stress
 # print(len(seen_punct))
-
+print(phonemes)
 # for word, prons in cmu.items():
 #     # Skip words with non-alphabetic characters
 #     if not word.isalpha():
@@ -87,14 +87,23 @@ print(y_out.shape)
 
 import csv
 
-with open("dataset/cmu_dict_pun_stress.csv", "w", newline='') as f:
-    writer = csv.writer(f)
-    writer.writerow(["word", "phonemes"])  # Write header row
 
-    for w, p in zip(words, phonemes):
-        word_str = ''.join(w)              # Convert list of chars to a string
-        phoneme_str = ' '.join(p)          # Convert list of phonemes to space-separated string
-        writer.writerow([word_str, phoneme_str])
+
+# df = pd.DataFrame({
+#     'word': words,
+#     'phonemes': phonemes  # Write lists as strings
+# })
+
+# df.to_csv('dataset/phoneme_dict.csv', index=False)
+
+# with open("dataset/cmu_dict_pun_stress.csv", "w", newline='') as f:
+#     writer = csv.writer(f)
+#     writer.writerow(["word", "phonemes"])  # Write header row
+
+#     for w, p in zip(words, phonemes):
+#         word_str = ''.join(w)              # Convert list of chars to a string
+#         phoneme_str = p         # Convert list of phonemes to space-separated string
+#         writer.writerow([word_str, phoneme_str])
 
 # with open("dataset/cmu_dict.csv", "w", newline='') as f:
 #     writer = csv.writer(f)
@@ -106,3 +115,17 @@ with open("dataset/cmu_dict_pun_stress.csv", "w", newline='') as f:
 #         writer.writerow([word, phoneme_str])
 
 
+
+
+
+# 0,"['Z', 'IH1', 'R', 'OW0']"
+# 1,"['W', 'AH1', 'N']"
+# 2,"['T', 'UW1']"
+# 3,"['TH', 'R', 'IY1']"
+# 4,"['F', 'AO1', 'R']"
+# 5,"['F', 'AY1', 'V']"
+# 6,"['S', 'IH1', 'K', 'S']"
+# 7,"['S', 'EH1', 'V', 'AH0', 'N']"
+# 8,"['EY1', 'T']"
+# 9,"['N', 'AY1', 'N']"
+# https,"['EY1', 'CH', 'T', 'IY1', 'T', 'IY1', 'P', 'IY1', 'EH1', 'S']"

@@ -14,7 +14,7 @@ import tensorflow as tf
 tf.config.threading.set_intra_op_parallelism_threads(1)
 tf.config.threading.set_inter_op_parallelism_threads(1)
 
-df = pd.read_csv("dataset/cmu_dict_pun_stress.csv")
+df = pd.read_csv("dataset/cmu_dict_with_stress.csv")
 
 df['word'] = df['word'].astype(str).apply(list)
 words = df['word'].values
@@ -73,7 +73,7 @@ y_out, _ = encode_sequences(phonemes, phn2idx, add_eos=True, maxlen=y_len)
 y_out = np.expand_dims(y_out, -1)
 print(y_out.shape)
 
-word_train, word_val, phoneme_train, phoneme_val = train_test_split(X, y_out, test_size=0.10, random_state=42)
+word_train, word_val, phoneme_train, phoneme_val = train_test_split(X, y_out, test_size=0.05, random_state=42)
 
 vocab_size = len(char2idx)
 phoneme_size = len(phn2idx)
@@ -103,7 +103,7 @@ def g2p_model(x_len,vocab_size,embedding_dim=128):
 
 model=g2p_model(x_len,vocab_size)
 model.summary()
-print(word_train)
+# print(word_train)
 
 callbacks = [
     EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True, verbose=1),
@@ -111,16 +111,13 @@ callbacks = [
 ]
 # Fit the model
 history=model.fit(word_train, phoneme_train, batch_size=32, epochs=100,validation_data=[word_val,phoneme_val],callbacks=callbacks)
-
+# history=model.fit(X, y_out, batch_size=32, epochs=100,validation_split=0.1,callbacks=callbacks)
 model.save('model/1/model_cnn.keras')
 model.save_weights('model/1/model_cnn_w.weights.h5')
 
 history_df = pd.DataFrame(history.history)
 history_df['epoch'] = range(1, len(history_df) + 1)
 history_df.to_csv('model/1/model_cnn_metrics.csv', index=False)
-
-
-
 
 
 # print(data_dict)``

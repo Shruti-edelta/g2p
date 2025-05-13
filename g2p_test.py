@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import ast
 
-df=pd.read_csv("dataset/cmu_dict_pun_stress.csv")
+df=pd.read_csv("dataset/cmu_dict_with_stress.csv")
 # df=pd.read_csv("dataset/cmu_dict_with_punctu_stress.csv")
 
 words = df["word"].tolist()
@@ -55,16 +55,16 @@ def preprocess_input(text, char2idx, maxlen=None):
 x_len=33
 # Example usage:
 new_text="Example"
-new_text="Unfolding File"
-new_text = "Shree Shruti"
-new_text = "excision's"
+# new_text="Unfolding File"
+# new_text = "Shree Shruti"
+# new_text = "excision's"
 # new_text="orange"
-new_text="one-all"
-# new_text='one. shruti two. shree'
+# new_text="one-all"
+# # new_text='one. shruti two. shree'
 # new_text="example.com"
-# new_text="cnn.com"
-new_text="a42128"
-new_text="#"
+# # new_text="cnn.com"
+# new_text="a42128"
+# new_text="#"
 preprocessed_input = preprocess_input(new_text, char2idx, maxlen=x_len)  # Use x_len from your training
 print("prerprocessed_input: ",preprocessed_input)
 
@@ -90,10 +90,10 @@ def decode_predictions(predictions, idx2phn):
     for w_p in predictions:
         # print(w_p)
         decoded_seq = [idx2phn.get(i, "<unk>") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token
-        # print(decoded_seq)
+        print(decoded_seq)
         decoded_preds.append(decoded_seq)
     return decoded_preds
-
+print(idx2phn)
 # Example usage:
 decoded_phonemes = decode_predictions(predicted_phonemes, idx2phn)
 print(decoded_phonemes)

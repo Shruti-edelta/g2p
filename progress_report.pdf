@@ -9,17 +9,16 @@ Roll No.: 07
 (3) Leaves taken: 2
 (4) Total working days of the Company in this month: 21
 (5) Task completed in the month of March 2025:
-    a. Developed a program to convert Roman numerals to integers and vice versa.
-    b. Develoaped automatically generate answers using the DeepSeek model (ollama).
-    c. The Terminal output can look like Clean, Formatted text using rich library (like ChatGPT displays its responses).
-    d. Trying to Developed responsive Voicebot.
-    e. Developed TTS Voice-Cloning system using BARK model.
-    f. Integrate the TTS system with the chatbot (combine BARK model and DeepSeek model).
-    g. Try to Understanding The TTS Model Pipeline for my Project.
+    a. build G2P model (grapheme to phoneme conversion) using cmudict dataset from NLTK library.
+    b. testing G2p model with test data and unseen data.
+    c. find TTS dataset (LJSpeech) and PreProcessing this dataset sutaible in my acoustic model.
+        - Text analysis step
+        - audio PreProcessing (silence remove,noise remove,trimming)
+    d. In Text analysis, implement G2P model to convert text to phonemes.
+    e. find acoustic model (text to mel-spectrogram) architecture.    
    
-(6) Planning for the month of April 2025:
-    a. Will try to find dataset for TTS Model.
-    b. PreProcessing Dataset for G2P Model using rule-based Technique.
-    c. Implementing G2P model.
+(6) Planning for the month of May 2025:
+    a. build and train the acoustic model.
+    b. I will try to make better performanece and accurate result in acoustic model.
     
 Signature of the guide Organization Date

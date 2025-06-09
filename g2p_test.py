@@ -54,7 +54,7 @@ def preprocess_input(text, char2idx, maxlen=None):
 
 x_len=33
 # Example usage:
-new_text="Example"
+new_text="EXAMPLE example"
 # new_text="Unfolding File"
 # new_text = "Shree Shruti"
 # new_text = "excision's"
@@ -80,7 +80,7 @@ def predict_phonemes(model, preprocessed_input):
 
 # Example usage:
 # model = tf.keras.models.load_model('model/model_cnn.keras') 
-model = tf.keras.models.load_model('model/1/best_model_cnn.keras') 
+model = tf.keras.models.load_model('model/1/3best_model_cnn.keras') 
 predicted_phonemes = predict_phonemes(model, preprocessed_input)
 print("predicted tokenizer phoneme:",predicted_phonemes)
 

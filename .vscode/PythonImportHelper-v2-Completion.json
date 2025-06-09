@@ -1511,7 +1511,7 @@
         "kind": 5,
         "importPath": "g2p_test",
         "description": "g2p_test",
-        "peekOfCode": "model = tf.keras.models.load_model('model/1/best_model_cnn.keras') \npredicted_phonemes = predict_phonemes(model, preprocessed_input)\nprint(\"predicted tokenizer phoneme:\",predicted_phonemes)\n# print(idx2phn)\ndef decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        # print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        print(decoded_seq)",
+        "peekOfCode": "model = tf.keras.models.load_model('model/1/3best_model_cnn.keras') \npredicted_phonemes = predict_phonemes(model, preprocessed_input)\nprint(\"predicted tokenizer phoneme:\",predicted_phonemes)\n# print(idx2phn)\ndef decode_predictions(predictions, idx2phn):\n    decoded_preds = []\n    for w_p in predictions:\n        # print(w_p)\n        decoded_seq = [idx2phn.get(i, \"<unk>\") for i in w_p if i != char2idx['<pad>']]  # Ignore <pad> token\n        print(decoded_seq)",
         "detail": "g2p_test",
         "documentation": {}
     },

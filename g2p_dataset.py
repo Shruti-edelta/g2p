@@ -87,8 +87,6 @@ print(y_out.shape)
 y_out = np.expand_dims(y_out, -1)  # required for sparse categorical loss
 print(y_out.shape)
 
-
-
 # df = pd.DataFrame({
 #     'word': words,
 #     'phonemes': phonemes  # Write lists as strings
